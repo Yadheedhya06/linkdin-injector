@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ProcessedLink, LinkedInPost, PostLink } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -99,8 +99,10 @@ async function getStatistics(table: string) {
     console.log(`\nThere are a total of ${count} records in the ${table} table.`);
 }
 
+type TableRecord = ProcessedLink | LinkedInPost | PostLink;
+
 async function deleteRecord(table: string) {
-    let records;
+    let records: TableRecord[] | undefined;
     switch (table) {
         case 'ProcessedLink':
             records = await prisma.processedLink.findMany();
@@ -123,7 +125,7 @@ async function deleteRecord(table: string) {
             type: 'list',
             name: 'recordToDelete',
             message: `Which record would you like to delete from the ${table} table?`,
-            choices: records.map((record: any) => ({
+            choices: records.map((record: TableRecord) => ({
                 name: `${Object.values(record).join(' - ')}`,
                 value: record.id,
             })),
