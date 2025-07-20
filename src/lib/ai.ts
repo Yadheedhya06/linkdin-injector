@@ -258,6 +258,7 @@ export async function generateLinkedInPost(
     ${selectedPrompt.template.replace('{context}', context)}
     
     ---
+    IMPORTANT: Generate the LinkedIn post as plain text only. Do not use any Markdown formatting, such as ** for bold, * for italic, # for headings, or any other special characters for styling. Use all caps or rephrase for emphasis if needed, but keep it simple and readable as unformatted text.
     
     Based on the post you just generated, extract 3-5 main topics or themes.
     Return a single JSON object with two keys:
@@ -297,6 +298,7 @@ export async function generateLinkedInPost(
     
     let postText = result.linkedinPost || '';
     postText = postText.replace(/#\w+/g, '').trim();
+    postText = postText.replace(/\*\*/g, '');
     postText = postText
       .split('\n')
       .map((line: string) => line.trim())
@@ -314,6 +316,7 @@ export async function generateLinkedInPost(
     
     let fallbackText = text;
     fallbackText = fallbackText.replace(/#\w+/g, '').trim();
+    fallbackText = fallbackText.replace(/\*\*/g, '');
     fallbackText = fallbackText
       .split('\n')
       .map((line: string) => line.trim())
