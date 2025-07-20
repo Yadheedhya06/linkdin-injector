@@ -13,8 +13,6 @@ import { ProcessedLink } from '@prisma/client';
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN!;
 const LINKEDIN_PERSON_URN = process.env.LINKEDIN_PERSON_URN!;
-const RPM_LIMIT = 5; 
-const DELAY_MS = (60 / RPM_LIMIT) * 1000 + 1000;
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

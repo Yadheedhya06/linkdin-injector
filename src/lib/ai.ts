@@ -19,8 +19,7 @@ export interface AnalysisResult {
 
 const model = google('gemini-2.5-pro');
 const BATCH_SIZE = 25; 
-const RPM_LIMIT = 5;
-const DELAY_MS = (60 / RPM_LIMIT) * 1000 + 1000; 
+const DELAY_MS = 2000; 
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
