@@ -11,19 +11,22 @@ export const POST_PROMPTS: PostPrompt[] = [
     id: 'professional-analyst',
     style: 'Industry Analyst',
     tone: 'professional',
-    template: `As a seasoned tech industry analyst, synthesize the following developments into a cohesive LinkedIn post:
+    template: `As a seasoned tech industry analyst, synthesize the following developments into a comprehensive LinkedIn post:
 
 {context}
 
-Create an analytical summary that:
-- Identifies the overarching trend or pattern
-- Provides data-driven insights
-- Offers strategic implications for professionals
-- Concludes with a forward-looking perspective
-- Includes appropriate emojis where they add value (maximum 6 emojis total)
+Create an in-depth analytical summary that:
+- Identifies the overarching trend or pattern with detailed explanation
+- Provides extensive data-driven insights and real-world implications
+- Offers strategic implications for professionals across different roles and industries
+- Explores potential challenges and opportunities in detail
+- Concludes with a forward-looking perspective and actionable takeaways
+- Includes appropriate emojis throughout to enhance readability and engagement
+- Uses clear, plain English that anyone can understand
+- Breaks down complex concepts into digestible insights
 - Does NOT include hashtags
 
-Keep it professional yet engaging, around 200-250 words.`
+Write comprehensively and engagingly, focusing on providing maximum value to readers through thorough analysis.`
   },
 
   // Thought Leadership
@@ -36,14 +39,17 @@ Keep it professional yet engaging, around 200-250 words.`
 {context}
 
 Your post should:
-- Challenge conventional thinking
-- Connect disparate ideas into a unified narrative
-- Pose a compelling question to the audience
-- Share a unique perspective that adds value
-- Use appropriate emojis sparingly where they enhance the message (maximum 6 emojis total)
+- Challenge conventional thinking with well-reasoned arguments
+- Connect disparate ideas into a unified narrative with clear transitions
+- Explore the deeper implications and second-order effects
+- Pose compelling questions that spark meaningful discussions
+- Share unique perspectives backed by concrete examples
+- Provide comprehensive analysis that demonstrates deep understanding
+- Use appropriate emojis strategically to emphasize key points
+- Write in clear, accessible language that engages both experts and newcomers
 - Avoid hashtags
 
-Write with authority and vision, approximately 200-250 words.`
+Write with authority and vision, providing as much valuable insight as needed to fully explore the topic.`
   },
 
   // Conversational Expert
@@ -55,15 +61,18 @@ Write with authority and vision, approximately 200-250 words.`
 
 {context}
 
-Share this in a conversational yet insightful way that:
-- Breaks down complex ideas simply
-- Uses relatable analogies
-- Includes a personal observation or experience
-- Ends with an engaging question for the community
-- Incorporates appropriate emojis to enhance readability (maximum 6 emojis total)
+Share this in a conversational yet deeply insightful way that:
+- Breaks down complex ideas into simple, relatable concepts
+- Uses multiple analogies and real-world examples
+- Includes personal observations, experiences, and lessons learned
+- Explores different perspectives and considerations
+- Addresses potential questions readers might have
+- Ends with engaging questions that invite community discussion
+- Incorporates emojis naturally throughout to enhance readability
+- Uses everyday language while maintaining professional credibility
 - Does not use hashtags
 
-Keep it friendly and accessible, around 200-250 words.`
+Keep it friendly and accessible while providing comprehensive insights that add real value.`
   },
 
   // Innovation Enthusiast
@@ -75,14 +84,18 @@ Keep it friendly and accessible, around 200-250 words.`
 
 {context}
 
-Create an energetic post that:
-- Highlights the innovative aspects
-- Connects to broader transformation themes
-- Uses dynamic language and appropriate emojis to convey excitement (maximum 6 emojis total)
-- Inspires action or further exploration
+Create an energetic and comprehensive post that:
+- Highlights innovative aspects with detailed explanations
+- Explores the transformative potential across multiple industries
+- Discusses the technology's evolution and future possibilities
+- Shares concrete examples of real-world applications
+- Analyzes both immediate and long-term impacts
+- Uses dynamic language and emojis to convey excitement and key insights
+- Inspires action with specific suggestions and opportunities
+- Maintains enthusiasm while providing substantive analysis
 - Avoids hashtags
 
-Make it exciting and forward-thinking, 200-250 words.`
+Make it exciting, forward-thinking, and packed with valuable insights.`
   },
 
   // Strategic Advisor
@@ -90,19 +103,22 @@ Make it exciting and forward-thinking, 200-250 words.`
     id: 'strategic-advisor',
     style: 'Strategic Advisor',
     tone: 'analytical',
-    template: `From a strategic perspective, these recent developments deserve our attention:
+    template: `From a strategic perspective, these recent developments deserve our detailed attention:
 
 {context}
 
-Develop a strategic analysis that:
-- Identifies key business implications
-- Provides actionable insights
-- Considers multiple stakeholder perspectives
-- Offers concrete recommendations
-- Uses emojis judiciously to highlight key points (maximum 6 emojis total)
+Develop a comprehensive strategic analysis that:
+- Identifies key business implications across multiple dimensions
+- Provides in-depth actionable insights with implementation considerations
+- Considers perspectives from various stakeholders (customers, employees, investors, society)
+- Offers concrete recommendations with rationale and expected outcomes
+- Analyzes risks, opportunities, and trade-offs
+- Discusses timing and market readiness factors
+- Uses emojis strategically to highlight critical points and improve readability
+- Employs clear, professional language accessible to diverse audiences
 - Does not include hashtags
 
-Write with clarity and purpose, approximately 200-250 words.`
+Write with clarity and purpose, providing thorough strategic guidance that readers can apply.`
   },
 
   // Tech Storyteller
@@ -114,15 +130,18 @@ Write with clarity and purpose, approximately 200-250 words.`
 
 {context}
 
-Craft a narrative that:
-- Weaves the developments into a compelling story
-- Uses vivid examples and scenarios
-- Makes technical concepts relatable
-- Leaves readers with something to ponder
-- Includes appropriate emojis to enhance the storytelling (maximum 6 emojis total)
+Craft a rich narrative that:
+- Weaves developments into a compelling, detailed story
+- Uses vivid examples, scenarios, and case studies
+- Makes technical concepts relatable through everyday comparisons
+- Explores the human element and societal impact
+- Builds tension and resolution like a good story
+- Includes character perspectives (users, developers, business leaders)
+- Uses emojis to enhance emotional connection and highlight key moments
+- Maintains narrative flow while delivering substantive insights
 - Avoids hashtags
 
-Tell it like a story, around 200-250 words.`
+Tell a complete story that educates, engages, and leaves readers with valuable takeaways.`
   },
 
   // Industry Connector
@@ -134,15 +153,18 @@ Tell it like a story, around 200-250 words.`
 
 {context}
 
-Create a synthesis that:
-- Shows relationships between different developments
-- Highlights cross-industry implications
-- Identifies collaboration opportunities
-- Encourages networking and discussion
-- Uses emojis thoughtfully to emphasize connections (maximum 6 emojis total)
+Create a comprehensive synthesis that:
+- Shows detailed relationships between different developments
+- Explores cross-industry implications with specific examples
+- Identifies collaboration opportunities and potential partnerships
+- Discusses ecosystem effects and network dynamics
+- Analyzes convergence trends and their significance
+- Provides insights on how professionals can leverage these connections
+- Uses emojis thoughtfully to visualize connections and emphasize relationships
+- Encourages networking with specific discussion points
 - Does not use hashtags
 
-Be insightful and collaborative, 200-250 words.`
+Be thoroughly insightful and collaborative, helping readers see the bigger picture and their place in it.`
   },
 
   // Future Forecaster
@@ -150,19 +172,23 @@ Be insightful and collaborative, 200-250 words.`
     id: 'future-forecaster',
     style: 'Future Forecaster',
     tone: 'innovative',
-    template: `Looking ahead, these current developments paint an intriguing picture:
+    template: `Looking ahead, these current developments paint an intriguing and complex picture:
 
 {context}
 
-Develop a forward-looking post that:
-- Extrapolates current trends
-- Presents plausible future scenarios
-- Discusses potential opportunities and challenges
-- Invites readers to shape the future
-- Incorporates appropriate emojis to visualize the future (maximum 6 emojis total)
+Develop a comprehensive forward-looking post that:
+- Extrapolates current trends with detailed reasoning
+- Presents multiple plausible future scenarios with timelines
+- Discusses potential opportunities, challenges, and unintended consequences
+- Explores societal, economic, and technological implications
+- Considers different adoption curves and market dynamics
+- Addresses potential disruptions and paradigm shifts
+- Invites readers to actively shape the future with specific actions
+- Uses emojis to visualize future concepts and highlight key predictions
+- Maintains balance between optimism and realism
 - Avoids hashtags
 
-Be visionary yet grounded, around 200-250 words.`
+Be visionary yet grounded, providing readers with a thorough understanding of what's coming and how to prepare.`
   }
 ];
 
