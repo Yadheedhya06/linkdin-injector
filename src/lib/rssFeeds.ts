@@ -9,7 +9,7 @@ export const RSS_FEEDS: RSSFeed[] = [
   {
     url: 'https://techcrunch.com/feed/',
     name: 'TechCrunch',
-    category: 'tech'
+    category: 'startup'
   },
   {
     url: 'https://www.theverge.com/rss/index.xml',
@@ -19,6 +19,21 @@ export const RSS_FEEDS: RSSFeed[] = [
   {
     url: 'https://feeds.arstechnica.com/arstechnica/index',
     name: 'Ars Technica',
+    category: 'tech'
+  },
+  {
+    url: 'https://feeds.arstechnica.com/arstechnica/technology-lab',
+    name: 'Ars Technica Technology Lab',
+    category: 'tech'
+  },
+  {
+    url: 'https://www.technologyreview.com/feed/',
+    name: 'MIT Technology Review',
+    category: 'tech'
+  },
+  {
+    url: 'https://www.wired.com/feed/rss',
+    name: 'Wired',
     category: 'tech'
   },
   
@@ -38,11 +53,6 @@ export const RSS_FEEDS: RSSFeed[] = [
   {
     url: 'https://venturebeat.com/feed/',
     name: 'VentureBeat',
-    category: 'startup'
-  },
-  {
-    url: 'https://www.wired.com/feed/rss',
-    name: 'Wired',
     category: 'tech'
   },
   
