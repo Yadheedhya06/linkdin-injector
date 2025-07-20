@@ -9,12 +9,9 @@ import {
   generateLinkedInPost, 
   filterRecentNews 
 } from '@/lib/ai';
-import { ProcessedLink } from '@prisma/client';
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN!;
 const LINKEDIN_PERSON_URN = process.env.LINKEDIN_PERSON_URN!;
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function GET() {
   console.log('Cron job started at:', new Date().toISOString());
