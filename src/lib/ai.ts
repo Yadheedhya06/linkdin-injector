@@ -199,6 +199,46 @@ export async function groupNewsByTopic(newsItems: NewsItem[]): Promise<Map<strin
 }
 
 /**
+ * Shortens a post if it exceeds a specified character limit.
+ */
+async function shortenPostIfNeeded(postText: string): Promise<string> {
+  if (postText.length <= 2800) {
+    return postText;
+  }
+
+  console.log(`Post is too long (${postText.length} chars). Shortening to 1500-1800 characters...`);
+  
+  const shortenPrompt = `The following text is intended for a LinkedIn post but it's too long. Please concisely rewrite it to be between 1500 and 1800 characters. It is crucial that you preserve the original tone, key messages, and all existing newline formatting (for paragraphs and lists). Return only the edited text, with no extra explanations or markdown.
+
+Original text:
+---
+${postText}
+---`;
+
+  try {
+    const { text: shortenedText } = await generateText({
+      model,
+      prompt: shortenPrompt,
+      temperature: 0.5,
+    });
+
+    console.log(`Post shortened from ${postText.length} to ${shortenedText.length} chars.`);
+
+    let cleanedText = shortenedText.replace(/#\w+/g, '').trim();
+    cleanedText = cleanedText
+      .split('\n')
+      .map((line: string) => line.trim())
+      .join('\n');
+
+    return cleanedText;
+  } catch (error) {
+    console.error('Error shortening the post:', error);
+    return postText;
+  }
+}
+
+
+/**
  * Generates an analytical LinkedIn post from grouped news items
  */
 export async function generateLinkedInPost(
@@ -257,7 +297,12 @@ export async function generateLinkedInPost(
     
     let postText = result.linkedinPost || '';
     postText = postText.replace(/#\w+/g, '').trim();
-    postText = postText.replace(/\s+/g, ' ').trim();
+    postText = postText
+      .split('\n')
+      .map((line: string) => line.trim())
+      .join('\n');
+    
+    postText = await shortenPostIfNeeded(postText);
     
     return {
       linkedinPost: postText,
@@ -269,8 +314,13 @@ export async function generateLinkedInPost(
     
     let fallbackText = text;
     fallbackText = fallbackText.replace(/#\w+/g, '').trim();
-    fallbackText = fallbackText.replace(/\s+/g, ' ').trim();
+    fallbackText = fallbackText
+      .split('\n')
+      .map((line: string) => line.trim())
+      .join('\n');
     
+    fallbackText = await shortenPostIfNeeded(fallbackText);
+
     return {
       linkedinPost: fallbackText,
       topics: ['Technology', 'Innovation'],
