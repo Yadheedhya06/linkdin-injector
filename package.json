@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "cron": "tsx src/scripts/cron.ts",
-    "test-linkedin-post": "tsx src/scripts/test-linkedin-post.ts"
+    "test-linkedin-post": "tsx src/scripts/test-linkedin-post.ts",
+    "db:actions": "tsx src/scripts/dashboard.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
@@ -23,11 +24,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/inquirer": "^9.0.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
+    "inquirer": "^12.7.0",
     "prisma": "^6.12.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
