@@ -1,0 +1,39 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model ProcessedLink {
+    id        Int      @id @default(autoincrement())
+    link      String   @unique
+    createdAt DateTime @default(now())
+}
+
+model LinkedInPost {
+    id            String   @id @default(cuid())
+    topic         String
+    postContent   String   @db.Text
+    promptStyle   String
+    linkedInId    String?
+    newsItemCount Int
+    topics        String[]
+    createdAt     DateTime @default(now())
+
+    includedLinks PostLink[]
+}
+
+model PostLink {
+    id     Int    @id @default(autoincrement())
+    link   String
+    title  String
+    source String
+
+    post   LinkedInPost @relation(fields: [postId], references: [id])
+    postId String
+
+    @@index([postId])
+}

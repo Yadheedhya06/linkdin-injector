@@ -6,21 +6,30 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cron": "tsx src/scripts/cron.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.2.22",
+    "@prisma/client": "^6.12.0",
+    "ai": "^4.3.19",
+    "axios": "^1.10.0",
+    "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.2"
+    "rss-parser": "^3.13.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
-    "@eslint/eslintrc": "^3"
+    "prisma": "^6.12.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5"
   },
   "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }
