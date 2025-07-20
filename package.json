@@ -7,13 +7,15 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "cron": "tsx src/scripts/cron.ts"
+    "cron": "tsx src/scripts/cron.ts",
+    "test-linkedin-post": "tsx src/scripts/test-linkedin-post.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
     "@prisma/client": "^6.12.0",
     "ai": "^4.3.19",
     "axios": "^1.10.0",
+    "dotenv": "^17.2.0",
     "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",

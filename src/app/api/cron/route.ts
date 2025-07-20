@@ -129,16 +129,15 @@ export async function GET() {
         console.log(`Marked ${newLinksToMark.length} new links as processed for topic "${topic}".`);
       }
       
+      const postId = response.headers['x-restli-id'];
+      const postUrl = `https://www.linkedin.com/feed/update/${postId}`;
+
       console.log(`Cron job finished. Processed topic: "${topic}".`);
-      return NextResponse.json({ 
-        message: 'Cron job completed successfully',
-        processed: {
-          totalFetched: allNewsItems.length,
-          recentNews: recentNews.length,
-          unprocessedNews: unprocessedNews.length,
-          topicsFound: topicGroups.size,
-          processedTopic: topic,
-        }
+      return NextResponse.json({
+        status: 'success',
+        postedLinkedInLink: postUrl,
+        postContent: analysis.linkedinPost,
+        usedLinks: newsItems.map(item => item.link),
       });
       
     } catch (error) {
