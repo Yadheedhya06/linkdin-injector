@@ -57,8 +57,8 @@ Follow these instructions to get the project up and running on your local machin
 1.  **Clone the repository**:
 
     ```bash
-    git clone https://github.com/your-username/linkedin-injector.git
-    cd linkedin-injector
+    git clone [https://github.com/your-username/linkedin-injector.git](https://github.com/Yadheedhya06/linkdin-injector.git)
+    cd linkdin-injector
     ```
 
 2.  **Install dependencies**:
@@ -86,7 +86,10 @@ Follow these instructions to get the project up and running on your local machin
 4.  **Set up the database**:
 
     ```bash
-    pnpm prisma migrate dev
+    npx prisma generate
+    ```
+    ```bash
+    npx prisma db push
     ```
 
 ### Running the Project
