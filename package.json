@@ -9,6 +9,10 @@
     "lint": "next lint",
     "cron": "tsx src/scripts/cron.ts",
     "test-linkedin-post": "tsx src/scripts/test-linkedin-post.ts",
+    "test-farming": "tsx src/scripts/test-farming.ts",
+    "test-farming-with-images": "tsx src/scripts/test-farming-with-images.ts",
+    "monitor-images": "tsx src/scripts/monitor-image-generation.ts",
+    "validate-images": "tsx src/scripts/validate-image-matching.ts",
     "db:actions": "tsx src/scripts/dashboard.ts"
   },
   "dependencies": {
@@ -21,7 +25,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
