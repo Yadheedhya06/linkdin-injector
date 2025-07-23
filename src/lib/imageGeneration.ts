@@ -1,6 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 import axios from 'axios';
+import { getImagesFromRSSFeeds, RSSImage } from './rssImageExtractor';
 
 const model = google('gemini-2.5-pro');
 
@@ -14,11 +15,77 @@ export interface ImageSuggestion {
 export interface GeneratedImage {
   url: string;
   alt: string;
-  source: 'unsplash' | 'pexels' | 'generated';
+  source: 'unsplash' | 'pexels' | 'rss' | 'generated';
   attribution?: string;
   tags?: string[];
   description?: string;
   relevanceScore?: number;
+  feedName?: string;
+  articleTitle?: string;
+  articleUrl?: string;
+}
+
+export interface ImageSourceTracker {
+  rssCount: number;
+  unsplashCount: number;
+  totalRuns: number;
+  shouldUseRSS(): boolean;
+  recordUsage(source: 'rss' | 'unsplash'): void;
+  getStats(): ImageUsageStats;
+}
+
+export interface ImageUsageStats {
+  totalRuns: number;
+  rssUsage: number;
+  unsplashUsage: number;
+  rssPercentage: number;
+  unsplashPercentage: number;
+  nextSource: 'rss' | 'unsplash';
+}
+
+class SimpleImageTracker implements ImageSourceTracker {
+  private static instance: SimpleImageTracker;
+  rssCount: number = 0;
+  unsplashCount: number = 0;
+  totalRuns: number = 0;
+
+  static getInstance(): SimpleImageTracker {
+    if (!SimpleImageTracker.instance) {
+      SimpleImageTracker.instance = new SimpleImageTracker();
+    }
+    return SimpleImageTracker.instance;
+  }
+
+  shouldUseRSS(): boolean {
+    if (this.totalRuns === 0) return true;
+    const unsplashRatio = this.unsplashCount / this.totalRuns;
+    return unsplashRatio >= 0.2;
+  }
+
+  recordUsage(source: 'rss' | 'unsplash'): void {
+    this.totalRuns++;
+    if (source === 'rss') {
+      this.rssCount++;
+    } else {
+      this.unsplashCount++;
+    }
+    console.log(`Image usage: RSS ${this.rssCount}/${this.totalRuns}, Unsplash ${this.unsplashCount}/${this.totalRuns}`);
+  }
+
+  getStats(): ImageUsageStats {
+    const rssPercentage = this.totalRuns > 0 ? (this.rssCount / this.totalRuns) * 100 : 0;
+    const unsplashPercentage = this.totalRuns > 0 ? (this.unsplashCount / this.totalRuns) * 100 : 0;
+    const nextSource = this.shouldUseRSS() ? 'rss' : 'unsplash';
+
+    return {
+      totalRuns: this.totalRuns,
+      rssUsage: this.rssCount,
+      unsplashUsage: this.unsplashCount,
+      rssPercentage: Math.round(rssPercentage * 100) / 100,
+      unsplashPercentage: Math.round(unsplashPercentage * 100) / 100,
+      nextSource
+    };
+  }
 }
 
 export async function generateImageSuggestions(postContent: string): Promise<ImageSuggestion[]> {
@@ -265,12 +332,32 @@ export async function getImagesForPost(
   imageCount: number = 1
 ): Promise<{ images: GeneratedImage[]; suggestions: ImageSuggestion[] }> {
   const suggestions = await generateImageSuggestions(postContent);
+  const tracker = SimpleImageTracker.getInstance();
   
   if (suggestions.length === 0) {
     return { images: [], suggestions: [] };
   }
 
   let images: GeneratedImage[] = [];
+
+  try {
+    const rssImages = await getImagesFromRSSFeeds(imageCount);
+    if (rssImages.length > 0 && tracker.shouldUseRSS()) {
+      console.log(`Using RSS images (${rssImages.length} found)`);
+      images = rssImages.map(rssImg => ({
+        url: rssImg.url,
+        alt: rssImg.alt,
+        source: 'rss' as const,
+        feedName: rssImg.feedName,
+        articleTitle: rssImg.articleTitle,
+        articleUrl: rssImg.articleUrl
+      }));
+      tracker.recordUsage('rss');
+      return { images: images.slice(0, imageCount), suggestions };
+    }
+  } catch (error) {
+    console.error('Error fetching RSS images:', error);
+  }
 
   const sortedSuggestions = suggestions.sort((a, b) => {
     const scoreA = (a as any).confidenceScore || 0.5;
@@ -328,6 +415,10 @@ export async function getImagesForPost(
     }
   }
 
+  if (images.length > 0) {
+    tracker.recordUsage('unsplash');
+  }
+
   return { images: images.slice(0, imageCount), suggestions };
 }
 
@@ -369,4 +460,9 @@ export async function generatePostWithImages(
     images,
     imageSuggestions: suggestions,
   };
+}
+
+export function getImageUsageStats(): ImageUsageStats {
+  const tracker = SimpleImageTracker.getInstance();
+  return tracker.getStats();
 }

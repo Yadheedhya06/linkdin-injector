@@ -3,8 +3,13 @@ import {
   generateLinkedInFarmingPost, 
   generateTechTipsPost, 
   generateCareerStoryPost, 
-  generateEngagementPost 
+  generateEngagementPost,
+  generateLinkedInFarmingPostWithImages,
+  generateTechTipsPostWithImages,
+  generateCareerStoryPostWithImages,
+  generateEngagementPostWithImages
 } from '@/lib/linkedinFarming';
+import { uploadImageToLinkedIn, createLinkedInPostWithImage, createLinkedInPostTextOnly } from '@/lib/linkedinImageUpload';
 import { getRandomTemplate } from '@/lib/contentTypes';
 import axios from 'axios';
 
@@ -16,58 +21,66 @@ export async function GET() {
   
   try {
     const template = getRandomTemplate();
-    let post: string;
+    let postWithImages: { content: string; images: any[] };
     let postType: string;
     
     switch (template.type) {
       case 'advice':
         if (template.category === 'tech') {
-          post = await generateTechTipsPost();
+          postWithImages = await generateTechTipsPostWithImages(undefined, 'unsplash', 1);
           postType = 'Tech Tips';
         } else {
-          post = await generateLinkedInFarmingPost();
+          postWithImages = await generateLinkedInFarmingPostWithImages('unsplash', 1);
           postType = 'General Advice';
         }
         break;
       case 'story':
       case 'lesson':
         if (template.category === 'career') {
-          post = await generateCareerStoryPost();
+          postWithImages = await generateCareerStoryPostWithImages('unsplash', 1);
           postType = 'Career Story';
         } else {
-          post = await generateLinkedInFarmingPost();
+          postWithImages = await generateLinkedInFarmingPostWithImages('unsplash', 1);
           postType = 'Story/Lesson';
         }
         break;
       case 'question':
-        post = await generateEngagementPost();
+        postWithImages = await generateEngagementPostWithImages('unsplash', 1);
         postType = 'Engagement Question';
         break;
       default:
-        post = await generateLinkedInFarmingPost();
+        postWithImages = await generateLinkedInFarmingPostWithImages('unsplash', 1);
         postType = 'General Farming';
         break;
     }
     
-    console.log(`Generated ${postType} post:`, post);
+    console.log(`Generated ${postType} post:`, postWithImages.content);
+    console.log(`Images found:`, postWithImages.images.length);
+    
+    let postBody;
+    
+    if (postWithImages.images.length > 0) {
+      try {
+        const mediaUrn = await uploadImageToLinkedIn(
+          postWithImages.images[0].url,
+          LINKEDIN_ACCESS_TOKEN,
+          LINKEDIN_PERSON_URN
+        );
+        
+        postBody = createLinkedInPostWithImage(postWithImages.content, mediaUrn, LINKEDIN_PERSON_URN);
+        console.log('Post will include image attachment');
+      } catch (imageError) {
+        console.warn('Image upload failed, posting text only:', imageError);
+        postBody = createLinkedInPostTextOnly(postWithImages.content, LINKEDIN_PERSON_URN);
+      }
+    } else {
+      console.log('No images found, posting text only');
+      postBody = createLinkedInPostTextOnly(postWithImages.content, LINKEDIN_PERSON_URN);
+    }
     
     const linkedinResponse = await axios.post(
       'https://api.linkedin.com/v2/ugcPosts',
-      {
-        author: LINKEDIN_PERSON_URN,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: {
-              text: post
-            },
-            shareMediaCategory: 'NONE'
-          }
-        },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
-        }
-      },
+      postBody,
       {
         headers: {
           'Authorization': `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
@@ -82,7 +95,8 @@ export async function GET() {
       success: true,
       message: `${postType} post published successfully`,
       template: template,
-      post: post
+      post: postWithImages.content,
+      imagesUsed: postWithImages.images.length
     });
     
   } catch (error) {

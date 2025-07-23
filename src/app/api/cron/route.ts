@@ -9,6 +9,8 @@ import {
   generateLinkedInPost, 
   filterRecentNews 
 } from '@/lib/ai';
+import { uploadImageToLinkedIn, createLinkedInPostWithImage, createLinkedInPostTextOnly } from '@/lib/linkedinImageUpload';
+import { getImagesForPost } from '@/lib/imageGeneration';
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN!;
 const LINKEDIN_PERSON_URN = process.env.LINKEDIN_PERSON_URN!;
@@ -84,21 +86,30 @@ export async function GET() {
       console.log(`Generated post using ${analysis.promptUsed} style for topic "${topic}"`);
       console.log(`---\nLinkedIn Post Draft:\n${analysis.linkedinPost}\n---`);
       
-      const postBody = {
-        author: LINKEDIN_PERSON_URN,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: {
-              text: analysis.linkedinPost
-            },
-            shareMediaCategory: 'NONE'
-          }
-        },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+      // Try to get images for the post
+      const { images } = await getImagesForPost(analysis.linkedinPost, 'unsplash', 1);
+      console.log(`Images found for post: ${images.length}`);
+      
+      let postBody;
+      
+      if (images.length > 0) {
+        try {
+          const mediaUrn = await uploadImageToLinkedIn(
+            images[0].url,
+            LINKEDIN_ACCESS_TOKEN,
+            LINKEDIN_PERSON_URN
+          );
+          
+          postBody = createLinkedInPostWithImage(analysis.linkedinPost, mediaUrn, LINKEDIN_PERSON_URN);
+          console.log('Post will include image attachment');
+        } catch (imageError) {
+          console.warn('Image upload failed, posting text only:', imageError);
+          postBody = createLinkedInPostTextOnly(analysis.linkedinPost, LINKEDIN_PERSON_URN);
         }
-      };
+      } else {
+        console.log('No images found, posting text only');
+        postBody = createLinkedInPostTextOnly(analysis.linkedinPost, LINKEDIN_PERSON_URN);
+      }
       
       const response = await axios.post(
         'https://api.linkedin.com/v2/ugcPosts',

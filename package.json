@@ -12,7 +12,6 @@
     "test-farming": "tsx src/scripts/test-farming.ts",
     "test-farming-with-images": "tsx src/scripts/test-farming-with-images.ts",
     "monitor-images": "tsx src/scripts/monitor-image-generation.ts",
-    "validate-images": "tsx src/scripts/validate-image-matching.ts",
     "db:actions": "tsx src/scripts/dashboard.ts"
   },
   "dependencies": {

@@ -1,34 +1,51 @@
 import { NextResponse } from 'next/server';
-import { generateCareerStoryPost } from '@/lib/linkedinFarming';
+import { generateCareerStoryPost, generateCareerStoryPostWithImages } from '@/lib/linkedinFarming';
+import { uploadImageToLinkedIn, createLinkedInPostWithImage, createLinkedInPostTextOnly } from '@/lib/linkedinImageUpload';
 import axios from 'axios';
 
 const LINKEDIN_ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN!;
 const LINKEDIN_PERSON_URN = process.env.LINKEDIN_PERSON_URN!;
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    console.log('Generating career story post...');
-    const post = await generateCareerStoryPost();
+    const { includeImages = true } = await request.json().catch(() => ({ includeImages: true }));
     
-    console.log('Generated post:', post);
+    console.log('Generating career story post with images:', includeImages);
+    
+    let postBody;
+    
+    if (includeImages) {
+      const postWithImages = await generateCareerStoryPostWithImages('unsplash', 1);
+      console.log('Generated post:', postWithImages.content);
+      console.log('Images found:', postWithImages.images.length);
+      
+      if (postWithImages.images.length > 0) {
+        try {
+          const mediaUrn = await uploadImageToLinkedIn(
+            postWithImages.images[0].url,
+            LINKEDIN_ACCESS_TOKEN,
+            LINKEDIN_PERSON_URN
+          );
+          
+          postBody = createLinkedInPostWithImage(postWithImages.content, mediaUrn, LINKEDIN_PERSON_URN);
+          console.log('Post will include image attachment');
+        } catch (imageError) {
+          console.warn('Image upload failed, posting text only:', imageError);
+          postBody = createLinkedInPostTextOnly(postWithImages.content, LINKEDIN_PERSON_URN);
+        }
+      } else {
+        console.log('No images found, posting text only');
+        postBody = createLinkedInPostTextOnly(postWithImages.content, LINKEDIN_PERSON_URN);
+      }
+    } else {
+      const post = await generateCareerStoryPost();
+      console.log('Generated post:', post);
+      postBody = createLinkedInPostTextOnly(post, LINKEDIN_PERSON_URN);
+    }
     
     const linkedinResponse = await axios.post(
       'https://api.linkedin.com/v2/ugcPosts',
-      {
-        author: LINKEDIN_PERSON_URN,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: {
-              text: post
-            },
-            shareMediaCategory: 'NONE'
-          }
-        },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
-        }
-      },
+      postBody,
       {
         headers: {
           'Authorization': `Bearer ${LINKEDIN_ACCESS_TOKEN}`,
@@ -42,7 +59,8 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       message: 'Career story post created and published',
-      post: post
+      hasImage: postBody.specificContent['com.linkedin.ugc.ShareContent'].shareMediaCategory === 'IMAGE',
+      postId: linkedinResponse.headers['x-restli-id']
     });
     
   } catch (error) {
