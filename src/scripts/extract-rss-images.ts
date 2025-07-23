@@ -20,7 +20,7 @@ async function extractRSSImages() {
         const imgMatches = content.match(/<img[^>]+src=["']([^"']+)["']/gi);
         
         if (imgMatches) {
-          imgMatches.slice(0, 3).forEach((img, imgIndex) => {
+          imgMatches.slice(0, 3).forEach((img: string, imgIndex: number) => {
             const src = img.match(/src=["']([^"']+)["']/i)?.[1];
             const alt = img.match(/alt=["']([^"']*)["']/i)?.[1] || 'No alt text';
             console.log(`  Image ${imgIndex + 1}:`);
