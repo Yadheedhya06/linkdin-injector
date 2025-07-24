@@ -13,7 +13,14 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body 
+                suppressHydrationWarning={true}
+                // Suppress hydration warnings for browser extension attributes
+                data-new-gr-c-s-check-loaded=""
+                data-gr-ext-installed=""
+            >
+                {children}
+            </body>
         </html>
     )
 } 

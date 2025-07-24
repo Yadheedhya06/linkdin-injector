@@ -9,6 +9,7 @@ export interface NewsItem {
   pubDate: string;
   source: string;
   category?: string;
+  images?: string[];
 }
 
 export interface AnalysisResult {
